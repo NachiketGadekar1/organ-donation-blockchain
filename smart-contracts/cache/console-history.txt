@@ -1,0 +1,7 @@
+await reg.OPO_ROLE();   // should return a bytes32 value
+const reg = await Registry.attach(process.env.REGISTRY_ADDRESS);
+const Registry = await ethers.getContractFactory("OrganRegistry");
+npx hardhat run scripts/deploy.js --network localhost
+await reg.OPO_ROLE();   // should return a bytes32 value
+const reg = await Registry.attach(process.env.REGISTRY_ADDRESS);
+const Registry = await ethers.getContractFactory("OrganRegistry");
