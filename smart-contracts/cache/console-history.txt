@@ -1,3 +1,6 @@
+await contract.organSeq();
+const contract = await OrganRegistry.attach("0x0165878A594ca255338adfa4d48449f69242Eb8F");
+const OrganRegistry = await ethers.getContractFactory("OrganRegistry");
 await reg.OPO_ROLE();   // should return a bytes32 value
 const reg = await Registry.attach(process.env.REGISTRY_ADDRESS);
 const Registry = await ethers.getContractFactory("OrganRegistry");
