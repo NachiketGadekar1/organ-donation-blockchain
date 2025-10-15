@@ -133,3 +133,87 @@ main {
   margin: 5px 0;
   font-size: 0.9rem;
 }
+
+/* Add these styles to the end of App.css */
+
+.reserve-button {
+  margin-top: 10px;
+  background-color: #28a745; /* Green color */
+  width: 100%;
+}
+
+.reserve-button:hover {
+  background-color: #218838;
+}
+
+.status-Available {
+  color: green;
+  font-weight: bold;
+}
+
+.status-Reserved {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-Transplanted {
+  color: blue;
+  font-weight: bold;
+}/* Add these styles to the end of App.css */
+
+.reserve-button {
+  margin-top: 10px;
+  background-color: #28a745; /* Green color */
+  width: 100%;
+}
+
+.reserve-button:hover {
+  background-color: #218838;
+}
+
+.status-Available {
+  color: green;
+  font-weight: bold;
+}
+
+.status-Reserved {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-Transplanted {
+  color: blue;
+  font-weight: bold;
+}
+
+/* Add this style to the end of App.css */
+
+.transplant-button {
+  margin-top: 10px;
+  background-color: #007bff; /* Blue color */
+  width: 100%;
+}
+
+.transplant-button:hover {
+  background-color: #0056b3;
+}
+
+/* Add these styles to the end of App.css */
+
+.revoke-button {
+  background-color: #dc3545; /* Red color */
+}
+
+.revoke-button:hover {
+  background-color: #c82333;
+}
+
+.button-group {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.button-group button {
+  width: 100%;
+}
