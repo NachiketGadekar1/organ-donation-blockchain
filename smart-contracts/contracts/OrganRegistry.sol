@@ -87,7 +87,7 @@ contract OrganRegistry is AccessControl, Pausable, ReentrancyGuard {
     }
 
     // --- Donors ---
-    function registerDonor(bytes32 donorIdHash, bytes32 offchainHash) external onlyOPO whenNotPaused {
+    function registerDonor(bytes32 donorIdHash, bytes32 offchainHash) external onlyHospital whenNotPaused {
         require(donors[donorIdHash].createdBy == address(0), "Donor exists");
         donors[donorIdHash] = Donor(msg.sender, offchainHash, true);
         emit DonorRegistered(donorIdHash, msg.sender, offchainHash);
@@ -134,7 +134,7 @@ contract OrganRegistry is AccessControl, Pausable, ReentrancyGuard {
         return id;
     }
 
-    function reserveOrgan(uint256 organId, bytes32 recipientIdHash) external onlyHospital whenNotPaused {
+    function reserveOrgan(uint256 organId, bytes32 recipientIdHash) external onlyOPO whenNotPaused {
         Organ storage o = organs[organId];
         require(o.status == OrganStatus.Listed, "Not listable");
         require(recipients[recipientIdHash].active, "Recipient inactive/!found");
