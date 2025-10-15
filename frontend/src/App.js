@@ -76,7 +76,7 @@ function App() {
         return <RecipientPage contract={contract} account={account} />;
       case 'organs':
       default:
-        return <OrganPage contract={contract} />;
+        return <OrganPage contract={contract} account={account} />;
     }
   };
 
