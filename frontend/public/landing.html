@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organ Donation Blockchain - A New Era of Transparency</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      background-color: #e0e0e0; /* Lighter background for better contrast */
+      color: #212121; /* Darker text for better contrast */
+    }
+    .navbar {
+      background: #ffffff; /* White background for navbar */
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Stronger shadow */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar .logo-container {
+      display: flex;
+      align-items: center;
+    }
+    .navbar .logo-container img {
+      height: 40px; /* Adjust logo size */
+      margin-right: 10px;
+    }
+    .navbar .logo-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #1565c0;
+    }
+    .navbar .nav-links a {
+      color: #424242; /* Darker link color */
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      transition: color 0.3s;
+      font-weight: 500; /* Slightly bolder */
+    }
+    .navbar .nav-links a:hover {
+      color: #1976d2;
+    }
+    .hero {
+      background: linear-gradient(to right, #0d47a1, #1976d2); /* Darker blue gradient */
+      color: white;
+      text-align: center;
+      padding: 120px 20px;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* Text shadow for contrast */
+    }
+    .hero p {
+      font-size: 1.6rem;
+      margin-bottom: 40px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero .button {
+      background-color: #e91e63; /* Secondary color for CTA */
+      color: white;
+      padding: 18px 40px;
+      font-size: 1.3rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Stronger shadow */
+    }
+    .hero .button:hover {
+      background-color: #c2185b;
+      transform: translateY(-2px);
+    }
+    .section {
+      padding: 100px 20px;
+      text-align: center;
+    }
+    .section h2 {
+      font-size: 3rem;
+      margin-bottom: 50px;
+      color: #1565c0;
+    }
+    .features-grid {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .feature-card {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15); /* Stronger shadow */
+      width: 320px;
+      text-align: center;
+      border: 1px solid #bdbdbd; /* Darker border */
+    }
+    .feature-card i {
+      font-size: 3.5rem;
+      color: #1976d2;
+      margin-bottom: 25px;
+    }
+    .feature-card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+      color: #1565c0;
+    }
+    .feature-card p {
+      color: #424242;
+    }
+    .how-it-works-steps {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      margin-top: 60px;
+      flex-wrap: wrap;
+    }
+    .step {
+      max-width: 280px;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border: 1px solid #bdbdbd; /* Darker border */
+    }
+    .step .step-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #e91e63; /* Secondary color for step numbers */
+      margin-bottom: 15px;
+    }
+    .step h3 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: #1565c0;
+    }
+    .step p {
+      color: #424242;
+    }
+    .footer {
+      background: #212121; /* Darker footer */
+      color: white;
+      text-align: center;
+      padding: 30px;
+      font-size: 0.9rem;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        padding: 1rem;
+      }
+      .navbar .nav-links {
+        margin-top: 1rem;
+      }
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      .hero p {
+        font-size: 1.2rem;
+      }
+      .section h2 {
+        font-size: 2rem;
+      }
+      .features-grid, .how-it-works-steps {
+        flex-direction: column;
+        align-items: center;
+      }
+      .feature-card, .step {
+        width: 90%;
+        max-width: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo-container">
+      <img src="/logo.png" alt="OrganChain Logo">
+      <div class="logo-text">OrganChain</div>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="/index.html" class="button">Launch App</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>A New Era of Trust in Organ Donation</h1>
+    <p>Leveraging blockchain for a transparent, secure, and efficient donation process.</p>
+    <a href="/index.html" class="button">Launch Application</a>
+  </section>
+
+  <section id="features" class="section">
+    <h2>Key Features</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fas fa-shield-alt"></i>
+        <h3>Immutable & Secure</h3>
+        <p>Every record is permanent and tamper-proof, ensuring data integrity from donor registration to transplant.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-eye"></i>
+        <h3>Complete Transparency</h3>
+        <p>All stakeholders can view the organ's journey, building trust and accountability in the system.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-rocket"></i>
+        <h3>Increased Efficiency</h3>
+        <p>Automated processes and smart contracts reduce paperwork and speed up the matching and allocation process.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="section" style="background-color: #f0f0f0;"> <!-- Slightly darker background -->
+    <h2>How It Works</h2>
+    <div class="how-it-works-steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Registration</h3>
+        <p>Hospitals and Organ Procurement Organizations (OPOs) register donors, recipients, and organs on the blockchain.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Verification</h3>
+        <p>Smart contracts automatically verify and match organs with recipients based on predefined criteria.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Tracking</h3>
+        <p>The entire process, from reservation to transplant, is tracked in real-time on the secure ledger.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>&copy; 2025 OrganChain. All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>

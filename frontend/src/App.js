@@ -5,6 +5,7 @@ import DonorPage from './components/DonorPage';
 import OrganPage from './components/OrganPage';
 import RecipientPage from './components/RecipientPage';
 import AdminPage from './components/AdminPage';
+import logo from './logo.png';
 import {
   AppBar,
   Toolbar,
@@ -123,8 +124,9 @@ function App() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
+          <img src={logo} alt="Logo" style={{ height: 40, marginRight: 16 }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Organ Donation Blockchain
+            OrganChain
           </Typography>
           {account ? (
             <Typography variant="body1">
