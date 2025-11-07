@@ -1,250 +1,298 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+/* === MODERN CSS REFRESH === */
+
+/* 1. Define the color palette and base styles */
+:root {
+  --primary-color: #007bff;
+  --primary-hover: #0056b3;
+  --success-color: #28a745;
+  --success-hover: #218838;
+  --danger-color: #dc3545;
+  --danger-hover: #c82333;
+  
+  --background-color: #f4f7f9;
+  --surface-color: #ffffff;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --border-color: #dee2e6;
+  
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
+
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --border-radius: 8px;
+}
+
+/* 2. Global Resets and Body Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f0f2f5;
+  background-color: var(--background-color);
+  color: var(--text-primary);
+  line-height: 1.6;
 }
 
+/* 3. Main App Layout */
 .App {
-  text-align: center;
-}
-
-.App-header {
-  background-color: white;
-  padding: 20px;
-  border-bottom: 1px solid #ccc;
-}
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-p {
-  font-size: 1.2rem;
-}
-
-.main-nav {
-  background-color: #333;
-  padding: 10px 0;
   display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.main-nav button {
-  background: none;
-  border: 1px solid white;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.main-nav button:hover {
-  background-color: #555;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 main {
-  padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  flex-grow: 1;
 }
 
 .page-container {
-  animation: fadeIn 0.5s;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
+/* 4. Header */
+.App-header {
+  background-color: var(--surface-color);
+  padding: 15px 30px;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
 
+.App-header h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.App-header p {
+  margin: 0;
+  font-size: 0.9rem;
+  background-color: #e9ecef;
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+}
+
+/* 5. Main Navigation (Modern Update) */
+.main-nav {
+  background-color: #2c3e50; /* A strong, dark blue-gray background */
+  padding: 0 20px; /* Remove vertical padding, add horizontal for spacing */
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Add a subtle shadow for depth */
+}
+
+.main-nav button {
+  /* Reset general button styles */
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  
+  /* Text and Sizing */
+  color: rgba(255, 255, 255, 0.7); /* Muted white for non-active items */
+  padding: 16px 24px; /* More padding for a premium feel */
+  font-size: 1rem;
+  font-weight: 600; /* Bolder font for readability */
+  
+  /* Underline effect setup */
+  border-bottom: 3px solid transparent; /* Reserve space for the underline */
+  transition: all 0.3s ease;
+}
+
+.main-nav button:hover {
+  /* On hover, make the text fully white and show the underline */
+  background-color: transparent; /* Ensure background doesn't change */
+  transform: none; /* Disable the general button's translateY effect */
+  box-shadow: none; /* Disable the general button's shadow effect */
+  color: #ffffff;
+  border-bottom-color: var(--primary-color); /* The primary blue underline appears */
+}
+
+/* Style for the currently active tab */
+.main-nav button.active {
+  color: #ffffff; /* Fully white text */
+  border-bottom-color: var(--primary-color); /* Solid underline */
+}
+
+/* 6. General Button Styles */
+button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+button:disabled {
+  background-color: #e9ecef;
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+/* Button variants */
+.reserve-button { background-color: var(--success-color); }
+.reserve-button:hover { background-color: var(--success-hover); }
+
+.transplant-button { background-color: var(--primary-color); }
+.transplant-button:hover { background-color: var(--primary-hover); }
+
+.revoke-button { background-color: var(--danger-color); }
+.revoke-button:hover { background-color: var(--danger-hover); }
+
+.button-group {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+.button-group button { width: 100%; padding: 10px; }
+
+/* 7. Forms and Inputs */
 .form-container {
   margin-top: 30px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  max-width: 500px;
+  padding: 25px;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  box-shadow: var(--box-shadow);
 }
 
-.form-container h2 {
+.form-container h2, .form-container h3 {
   margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
-.form-container input {
+.form-container input, .form-container select {
   display: block;
-  width: 95%;
-  padding: 10px;
+  width: 100%;
+  padding: 12px;
   margin-bottom: 15px;
   font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  background-color: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-container input:focus, .form-container select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
 .form-container button {
   width: 100%;
+  margin-top: 10px;
 }
 
+.access-denied {
+  color: var(--danger-color);
+  background-color: rgba(220, 53, 69, 0.1);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: var(--border-radius);
+  text-align: center;
+}
+
+/* 8. Organ List and Cards */
 .list-container {
-  margin-top: 30px;
+  margin-top: 40px;
+}
+
+.list-container h3 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .organ-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
 }
 
 .organ-card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 15px;
-  width: calc(33.333% - 20px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.organ-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.08);
 }
 
 .organ-card h4 {
   margin-top: 0;
-  color: #007bff;
+  margin-bottom: 15px;
+  color: var(--primary-color);
+  font-size: 1.2rem;
 }
 
 .organ-card p {
-  margin: 5px 0;
-  font-size: 0.9rem;
+  margin: 8px 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
 }
 
-/* Add these styles to the end of App.css */
-
-.reserve-button {
-  margin-top: 10px;
-  background-color: #28a745; /* Green color */
-  width: 100%;
+.organ-card p strong {
+  color: var(--text-primary);
 }
 
-.reserve-button:hover {
-  background-color: #218838;
-}
+/* Status colors */
+.status-Available { color: var(--success-color); font-weight: bold; }
+.status-Reserved { color: #fd7e14; font-weight: bold; } /* Orange */
+.status-Transplanted { color: var(--primary-color); font-weight: bold; }
+.status-Revoked { color: var(--danger-color); font-weight: bold; }
 
-.status-Available {
-  color: green;
-  font-weight: bold;
-}
-
-.status-Reserved {
-  color: orange;
-  font-weight: bold;
-}
-
-.status-Transplanted {
-  color: blue;
-  font-weight: bold;
-}/* Add these styles to the end of App.css */
-
-.reserve-button {
-  margin-top: 10px;
-  background-color: #28a745; /* Green color */
-  width: 100%;
-}
-
-.reserve-button:hover {
-  background-color: #218838;
-}
-
-.status-Available {
-  color: green;
-  font-weight: bold;
-}
-
-.status-Reserved {
-  color: orange;
-  font-weight: bold;
-}
-
-.status-Transplanted {
-  color: blue;
-  font-weight: bold;
-}
-
-/* Add this style to the end of App.css */
-
-.transplant-button {
-  margin-top: 10px;
-  background-color: #007bff; /* Blue color */
-  width: 100%;
-}
-
-.transplant-button:hover {
-  background-color: #0056b3;
-}
-
-/* Add these styles to the end of App.css */
-
-.revoke-button {
-  background-color: #dc3545; /* Red color */
-}
-
-.revoke-button:hover {
-  background-color: #c82333;
-}
-
-.button-group {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-}
-
-.button-group button {
-  width: 100%;
-}
-
-/* Add this style to the end of App.css */
-.form-container select {
-  display: block;
-  width: 100%; /* Match the input width */
-  padding: 10px;
-  margin-bottom: 15px;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: white;
-}
-
-/* Add these styles to the end of App.css */
-
-/* Style for disabled form elements */
-button:disabled,
-input:disabled,
-select:disabled {
-  background-color: #e9ecef;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-/* Style for the access denied message */
-.access-denied {
-  color: #dc3545; /* Red color */
-  font-size: 0.9rem;
-  font-weight: bold;
-  margin-bottom: 10px;
+/* 9. Responsiveness */
+@media (max-width: 768px) {
+  .App-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .organ-list {
+    grid-template-columns: 1fr;
+  }
 }

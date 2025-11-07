@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 
-function OrganPage({ contract, account, isOpo }) {
+function OrganPage({ contract, account, isOpo, isHospital }) {
   const [organType, setOrganType] = useState("0");
   const [donorId, setDonorId] = useState("");
   const [bloodHlaHash, setBloodHlaHash] = useState("");
@@ -42,16 +42,36 @@ function OrganPage({ contract, account, isOpo }) {
     } catch (error) { console.error("Error listing organ:", error); alert("Error listing organ."); }
   };
 
+  // In frontend/src/components/OrganPage.js
+  
   const handleReserveOrgan = async (organId) => {
-    const recipientId = prompt("Please enter the Recipient ID:");
-    if (!recipientId) return;
-    try {
-      const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
-      const signer = await provider.getSigner(account);
-      const tx = await contract.connect(signer).reserveOrgan(organId, ethers.id(recipientId));
-      await tx.wait();
-      alert("Organ reserved successfully!"); fetchOrgans();
-    } catch (error) { console.error("Error reserving organ:", error); alert("Error reserving organ."); }
+      // First prompt for the Recipient ID
+      const recipientId = prompt("Please enter the Recipient ID:");
+      if (!recipientId) return;
+  
+      // --- THIS IS THE FIX ---
+      // Add a second prompt for the hospital's address
+      const hospitalAddress = prompt("Please enter the address of the recipient's hospital:");
+      if (!hospitalAddress || !ethers.isAddress(hospitalAddress)) {
+          alert("A valid hospital address is required.");
+          return;
+      }
+      // --- END OF FIX ---
+  
+      try {
+          const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
+          const signer = await provider.getSigner(account);
+          
+          // Pass all THREE arguments to the contract function
+          const tx = await contract.connect(signer).reserveOrgan(organId, ethers.id(recipientId), hospitalAddress);
+          
+          await tx.wait();
+          alert("Organ reserved successfully!");
+          fetchOrgans();
+      } catch (error) {
+          console.error("Error reserving organ:", error);
+          alert("Error reserving organ.");
+      }
   };
 
   const handleRecordTransplant = async (organId) => {
@@ -102,10 +122,21 @@ function OrganPage({ contract, account, isOpo }) {
                 <p><strong>Status:</strong> <span className={`status-${organStatus[organ.status]}`}>{organStatus[organ.status]}</span></p>
                 <p><strong>Listed By:</strong> {organ.listedBy.substring(0, 6)}...{organ.listedBy.substring(organ.listedBy.length - 4)}</p>
                 {organ.status === 0n && isOpo && <button className="reserve-button" onClick={() => handleReserveOrgan(organ.organId)}>Reserve Organ</button>}
-                {organ.status === 1n && isOpo && (
+                
+                {/* Show button group only for Reserved organs */}
+                {organ.status === 1n && (
                   <div className="button-group">
-                    <button className="transplant-button" onClick={() => handleRecordTransplant(organ.organId)}>Record Transplant</button>
-                    <button className="revoke-button" onClick={() => handleRevokeOrgan(organ.organId)}>Revoke</button>
+                
+                    {/* CONDITIONAL: Show Transplant button ONLY to the designated Hospital */}
+                    {isHospital && organ.transplantHospital.toLowerCase() === account.toLowerCase() && (
+                      <button className="transplant-button" onClick={() => handleRecordTransplant(organ.organId)}>Record Transplant</button>
+                    )}
+                
+                    {/* CONDITIONAL: Show Revoke button ONLY to the OPO */}
+                    {isOpo && (
+                      <button className="revoke-button" onClick={() => handleRevokeOrgan(organ.organId)}>Revoke</button>
+                    )}
+                
                   </div>
                 )}
               </div>

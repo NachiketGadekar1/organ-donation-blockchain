@@ -110,7 +110,9 @@ function App() {
         return <AdminPage contract={contract} account={account} />;
       case 'organs':
       default:
-        return <OrganPage contract={contract} account={account} isOpo={isOpo} />;
+      // In App.js, inside renderView()
+      
+      return <OrganPage contract={contract} account={account} isOpo={isOpo} isHospital={isHospital} />;
     }
   };
 

@@ -36,7 +36,8 @@ contract OrganRegistry is AccessControl, Pausable, ReentrancyGuard {
         bytes32 bloodHlaHash; // hash of blood type + HLA summary
         OrganStatus status;
         address listedBy;
-        address reservedFor; // recipient address that reserved it (virtual id)
+        address reservedFor; // The OPO that reserved it
+        address transplantHospital; // << --- FIX 1: ADDED THIS FIELD
         uint256 reservedAt;
         uint256 transplantedAt;
     }
@@ -56,7 +57,6 @@ contract OrganRegistry is AccessControl, Pausable, ReentrancyGuard {
     event OrganReserved(uint256 indexed organId, bytes32 indexed recipientIdHash, address by);
     event OrganTransplanted(uint256 indexed organId, bytes32 indexed recipientIdHash, uint256 when, address by);
     event OrganRevoked(uint256 indexed organId, address by, string reason);
-  
 
     // --- Constructor ---
     constructor(address admin) {
@@ -78,12 +78,10 @@ contract OrganRegistry is AccessControl, Pausable, ReentrancyGuard {
     // --- Pause Controls ---
     function pause() external onlyRole(DEFAULT_ADMIN_ROLE) {
         _pause();
-        emit Paused(msg.sender);
     }
 
     function unpause() external onlyRole(DEFAULT_ADMIN_ROLE) {
         _unpause();
-        emit Unpaused(msg.sender);
     }
 
     // --- Donors ---
@@ -127,6 +125,7 @@ contract OrganRegistry is AccessControl, Pausable, ReentrancyGuard {
             status: OrganStatus.Listed,
             listedBy: msg.sender,
             reservedFor: address(0),
+            transplantHospital: address(0), // << --- FIX 2: INITIALIZE FIELD
             reservedAt: 0,
             transplantedAt: 0
         });
@@ -134,20 +133,25 @@ contract OrganRegistry is AccessControl, Pausable, ReentrancyGuard {
         return id;
     }
 
-    function reserveOrgan(uint256 organId, bytes32 recipientIdHash) external onlyOPO whenNotPaused {
+    // << --- FIX 3: UPDATED FUNCTION SIGNATURE AND LOGIC
+    function reserveOrgan(uint256 organId, bytes32 recipientIdHash, address hospitalAddress) external onlyOPO whenNotPaused {
         Organ storage o = organs[organId];
         require(o.status == OrganStatus.Listed, "Not listable");
         require(recipients[recipientIdHash].active, "Recipient inactive/!found");
+        require(hasRole(HOSPITAL_ROLE, hospitalAddress), "Address is not a hospital");
+
         o.status = OrganStatus.Reserved;
-        o.reservedFor = msg.sender; // hospital that reserved
+        o.reservedFor = msg.sender;
+        o.transplantHospital = hospitalAddress;
         o.reservedAt = block.timestamp;
         emit OrganReserved(organId, recipientIdHash, msg.sender);
     }
 
+    // << --- FIX 4: UPDATED REQUIRE STATEMENT
     function recordTransplant(uint256 organId, bytes32 recipientIdHash) external onlyHospital nonReentrant whenNotPaused {
         Organ storage o = organs[organId];
         require(o.status == OrganStatus.Reserved, "Not reserved");
-        require(o.reservedFor == msg.sender, "Reserved by other hospital");
+        require(o.transplantHospital == msg.sender, "Not the designated transplant hospital");
         o.status = OrganStatus.Transplanted;
         o.transplantedAt = block.timestamp;
         emit OrganTransplanted(organId, recipientIdHash, block.timestamp, msg.sender);
