@@ -1,16 +1,36 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Paper,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  CircularProgress,
+  Alert,
+  Chip,
+} from '@mui/material';
 
 function OrganPage({ contract, account, isOpo, isHospital }) {
   const [organType, setOrganType] = useState("0");
   const [donorId, setDonorId] = useState("");
   const [bloodHlaHash, setBloodHlaHash] = useState("");
   const [organs, setOrgans] = useState([]);
+  const [loading, setLoading] = useState(true);
   const organTypes = ["Heart", "Liver", "Lungs", "Kidney", "Pancreas", "Intestine"];
   const organStatus = ["Available", "Reserved", "Transplanted", "Revoked"];
 
   const fetchOrgans = async () => {
     if (!contract) return;
+    setLoading(true);
     try {
       const count = await contract.organSeq();
       const organsList = [];
@@ -21,6 +41,8 @@ function OrganPage({ contract, account, isOpo, isHospital }) {
       setOrgans(organsList);
     } catch (error) {
       console.error("Error fetching organs:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,27 +64,20 @@ function OrganPage({ contract, account, isOpo, isHospital }) {
     } catch (error) { console.error("Error listing organ:", error); alert("Error listing organ."); }
   };
 
-  // In frontend/src/components/OrganPage.js
-  
   const handleReserveOrgan = async (organId) => {
-      // First prompt for the Recipient ID
       const recipientId = prompt("Please enter the Recipient ID:");
       if (!recipientId) return;
   
-      // --- THIS IS THE FIX ---
-      // Add a second prompt for the hospital's address
       const hospitalAddress = prompt("Please enter the address of the recipient's hospital:");
       if (!hospitalAddress || !ethers.isAddress(hospitalAddress)) {
           alert("A valid hospital address is required.");
           return;
       }
-      // --- END OF FIX ---
   
       try {
           const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
           const signer = await provider.getSigner(account);
           
-          // Pass all THREE arguments to the contract function
           const tx = await contract.connect(signer).reserveOrgan(organId, ethers.id(recipientId), hospitalAddress);
           
           await tx.wait();
@@ -98,53 +113,112 @@ function OrganPage({ contract, account, isOpo, isHospital }) {
     } catch (error) { console.error("Error revoking organ:", error); alert("Error revoking organ."); }
   };
 
+  const getStatusChipColor = (status) => {
+    switch (status) {
+      case 0: return "success"; // Available
+      case 1: return "warning"; // Reserved
+      case 2: return "primary"; // Transplanted
+      case 3: return "error";   // Revoked
+      default: return "default";
+    }
+  };
+
   return (
-    <div className="page-container">
-      <h2>Organs</h2>
-      <div className="form-container">
-        <h3>List New Organ</h3>
-        {!isOpo && <p className="access-denied">You must have the OPO role to manage organs.</p>}
-        <select value={organType} onChange={(e) => setOrganType(e.target.value)} disabled={!isOpo}>
-          {organTypes.map((type, index) => <option key={index} value={index}>{type}</option>)}
-        </select>
-        <input type="text" placeholder="Registered Donor ID" value={donorId} onChange={(e) => setDonorId(e.target.value)} disabled={!isOpo} />
-        <input type="text" placeholder="Blood & HLA Hash" value={bloodHlaHash} onChange={(e) => setBloodHlaHash(e.target.value)} disabled={!isOpo} />
-        <button onClick={handleListOrgan} disabled={!isOpo}>List Organ</button>
-      </div>
-      <div className="list-container">
-        <h3>Available Organs</h3>
-        <div className="organ-list">
+    <Box>
+      <Paper elevation={3} sx={{ p: 3, mb: 4, maxWidth: 600, mx: 'auto' }}>
+        <Typography variant="h5" gutterBottom>List New Organ</Typography>
+        {!isOpo && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            You must have the OPO role to manage organs.
+          </Alert>
+        )}
+        <Box component="form" noValidate autoComplete="off">
+          <FormControl fullWidth margin="normal" disabled={!isOpo}>
+            <InputLabel>Organ Type</InputLabel>
+            <Select value={organType} onChange={(e) => setOrganType(e.target.value)} label="Organ Type">
+              {organTypes.map((type, index) => <MenuItem key={index} value={index}>{type}</MenuItem>)}
+            </Select>
+          </FormControl>
+          <TextField
+            fullWidth
+            label="Registered Donor ID"
+            value={donorId}
+            onChange={(e) => setDonorId(e.target.value)}
+            margin="normal"
+            disabled={!isOpo}
+          />
+          <TextField
+            fullWidth
+            label="Blood & HLA Hash"
+            value={bloodHlaHash}
+            onChange={(e) => setBloodHlaHash(e.target.value)}
+            margin="normal"
+            disabled={!isOpo}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleListOrgan}
+            disabled={!isOpo}
+            fullWidth
+            sx={{ mt: 2 }}
+          >
+            List Organ
+          </Button>
+        </Box>
+      </Paper>
+
+      <Typography variant="h4" gutterBottom align="center">Available Organs</Typography>
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Grid container spacing={3}>
           {organs.length > 0 ? (
             organs.map((organ, index) => (
-              <div key={index} className="organ-card">
-                <h4>Organ ID: {organ.organId.toString()}</h4>
-                <p><strong>Type:</strong> {organTypes[organ.organType]}</p>
-                <p><strong>Status:</strong> <span className={`status-${organStatus[organ.status]}`}>{organStatus[organ.status]}</span></p>
-                <p><strong>Listed By:</strong> {organ.listedBy.substring(0, 6)}...{organ.listedBy.substring(organ.listedBy.length - 4)}</p>
-                {organ.status === 0n && isOpo && <button className="reserve-button" onClick={() => handleReserveOrgan(organ.organId)}>Reserve Organ</button>}
-                
-                {/* Show button group only for Reserved organs */}
-                {organ.status === 1n && (
-                  <div className="button-group">
-                
-                    {/* CONDITIONAL: Show Transplant button ONLY to the designated Hospital */}
-                    {isHospital && organ.transplantHospital.toLowerCase() === account.toLowerCase() && (
-                      <button className="transplant-button" onClick={() => handleRecordTransplant(organ.organId)}>Record Transplant</button>
+              <Grid item xs={12} sm={6} md={6} key={index}>
+                <Card variant="outlined" elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderColor: 'border.main' }}>
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" gutterBottom>
+                      Organ ID: {organ.organId.toString()}
+                    </Typography>
+                    <Typography variant="body1"><strong>Type:</strong> {organTypes[organ.organType]}</Typography>
+                    <Box sx={{ my: 1 }}>
+                      <Chip label={organStatus[organ.status]} color={getStatusChipColor(Number(organ.status))} />
+                    </Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Listed By: {organ.listedBy.substring(0, 6)}...{organ.listedBy.substring(organ.listedBy.length - 4)}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    {organ.status === 0n && isOpo && (
+                      <Button size="small" color="primary" variant="contained" onClick={() => handleReserveOrgan(organ.organId)}>
+                        Reserve
+                      </Button>
                     )}
-                
-                    {/* CONDITIONAL: Show Revoke button ONLY to the OPO */}
-                    {isOpo && (
-                      <button className="revoke-button" onClick={() => handleRevokeOrgan(organ.organId)}>Revoke</button>
+                    {organ.status === 1n && isHospital && organ.transplantHospital.toLowerCase() === account.toLowerCase() && (
+                      <Button size="small" color="primary" variant="contained" onClick={() => handleRecordTransplant(organ.organId)}>
+                        Record Transplant
+                      </Button>
                     )}
-                
-                  </div>
-                )}
-              </div>
+                    {organ.status === 1n && isOpo && (
+                      <Button size="small" color="secondary" variant="outlined" onClick={() => handleRevokeOrgan(organ.organId)}>
+                        Revoke
+                      </Button>
+                    )}
+                  </CardActions>
+                </Card>
+              </Grid>
             ))
-          ) : (<p>No organs listed yet.</p>)}
-        </div>
-      </div>
-    </div>
+          ) : (
+            <Grid item xs={12}>
+              <Typography variant="body1" align="center">No organs listed yet.</Typography>
+            </Grid>
+          )}
+        </Grid>
+      )}
+    </Box>
   );
 }
 

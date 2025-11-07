@@ -1,5 +1,16 @@
 import { useState } from 'react';
 import { ethers } from 'ethers';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Paper,
+} from '@mui/material';
 
 function AdminPage({ contract, account }) {
   const [address, setAddress] = useState("");
@@ -15,7 +26,6 @@ function AdminPage({ contract, account }) {
         ? await contract.HOSPITAL_ROLE() 
         : await contract.OPO_ROLE();
       
-      // REVERTED: Create provider and signer here
       const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
       const signer = await provider.getSigner(account);
 
@@ -30,18 +40,43 @@ function AdminPage({ contract, account }) {
   };
 
   return (
-    <div className="page-container">
-      <h2>Admin Panel - Grant Roles</h2>
-      <div className="form-container">
-        <h3>Grant a New Role</h3>
-        <input type="text" placeholder="User Address (e.g., 0x...)" value={address} onChange={(e) => setAddress(e.target.value)} />
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="HOSPITAL">Hospital Role</option>
-          <option value="OPO">OPO Role</option>
-        </select>
-        <button onClick={handleGrantRole}>Grant Role</button>
-      </div>
-    </div>
+    <Paper elevation={3} sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
+      <Typography variant="h4" gutterBottom align="center">
+        Admin Panel
+      </Typography>
+      <Typography variant="h6" gutterBottom>
+        Grant a New Role
+      </Typography>
+      <Box component="form" noValidate autoComplete="off">
+        <TextField
+          fullWidth
+          label="User Address (e.g., 0x...)"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          margin="normal"
+        />
+        <FormControl fullWidth margin="normal">
+          <InputLabel>Role</InputLabel>
+          <Select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            label="Role"
+          >
+            <MenuItem value="HOSPITAL">Hospital Role</MenuItem>
+            <MenuItem value="OPO">OPO Role</MenuItem>
+          </Select>
+        </FormControl>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleGrantRole}
+          fullWidth
+          sx={{ mt: 2 }}
+        >
+          Grant Role
+        </Button>
+      </Box>
+    </Paper>
   );
 }
 

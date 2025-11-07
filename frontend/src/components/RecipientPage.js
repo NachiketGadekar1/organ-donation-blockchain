@@ -1,5 +1,13 @@
 import { useState } from 'react';
 import { ethers } from 'ethers';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Alert,
+} from '@mui/material';
 
 function RecipientPage({ contract, account, isHospital }) {
   const [recipientId, setRecipientId] = useState("");
@@ -11,7 +19,6 @@ function RecipientPage({ contract, account, isHospital }) {
       return;
     }
     try {
-      // REVERTED: Create provider and signer here
       const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
       const signer = await provider.getSigner(account);
       const recipientIdHash = ethers.id(recipientId);
@@ -29,16 +36,47 @@ function RecipientPage({ contract, account, isHospital }) {
   };
 
   return (
-    <div className="page-container">
-      <h2>Recipients</h2>
-      <div className="form-container">
-        <h3>Register New Recipient</h3>
-        {!isHospital && <p className="access-denied">You must have the HOSPITAL role to register recipients.</p>}
-        <input type="text" placeholder="Recipient ID (e.g., 'recipient-001')" value={recipientId} onChange={(e) => setRecipientId(e.target.value)} disabled={!isHospital} />
-        <input type="text" placeholder="Off-chain Medical Record Hash" value={offchainHash} onChange={(e) => setOffchainHash(e.target.value)} disabled={!isHospital} />
-        <button onClick={handleRegisterRecipient} disabled={!isHospital}>Register Recipient</button>
-      </div>
-    </div>
+    <Paper elevation={3} sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
+      <Typography variant="h4" gutterBottom align="center">
+        Recipients
+      </Typography>
+      <Typography variant="h6" gutterBottom>
+        Register New Recipient
+      </Typography>
+      {!isHospital && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          You must have the HOSPITAL role to register recipients.
+        </Alert>
+      )}
+      <Box component="form" noValidate autoComplete="off">
+        <TextField
+          fullWidth
+          label="Recipient ID (e.g., 'recipient-001')"
+          value={recipientId}
+          onChange={(e) => setRecipientId(e.target.value)}
+          margin="normal"
+          disabled={!isHospital}
+        />
+        <TextField
+          fullWidth
+          label="Off-chain Medical Record Hash"
+          value={offchainHash}
+          onChange={(e) => setOffchainHash(e.target.value)}
+          margin="normal"
+          disabled={!isHospital}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleRegisterRecipient}
+          disabled={!isHospital}
+          fullWidth
+          sx={{ mt: 2 }}
+        >
+          Register Recipient
+        </Button>
+      </Box>
+    </Paper>
   );
 }
 
