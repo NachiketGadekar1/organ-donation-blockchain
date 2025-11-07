@@ -27,6 +27,14 @@ function OrganPage({ contract, account, isOpo, isHospital }) {
   const [loading, setLoading] = useState(true);
   const organTypes = ["Heart", "Liver", "Lungs", "Kidney", "Pancreas", "Intestine"];
   const organStatus = ["Available", "Reserved", "Transplanted", "Revoked"];
+  const organIcons = {
+    "Heart": "fas fa-heart",
+    "Lungs": "fas fa-lungs",
+    "Liver": "fas fa-medkit",
+    "Kidney": "fas fa-medkit",
+    "Pancreas": "fas fa-medkit",
+    "Intestine": "fas fa-medkit",
+  };
 
   const fetchOrgans = async () => {
     if (!contract) return;
@@ -177,13 +185,16 @@ function OrganPage({ contract, account, isOpo, isHospital }) {
         <Grid container spacing={3}>
           {organs.length > 0 ? (
             organs.map((organ, index) => (
-              <Grid item xs={12} sm={6} md={6} key={index}>
-                <Card variant="outlined" elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderColor: 'border.main' }}>
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" gutterBottom>
+              <Grid item xs={12} sm={12} md={12} key={index}>
+                <Card variant="outlined" elevation={3} sx={{ display: 'flex', flexDirection: 'column', borderColor: 'border.main', mb: 3, transition: 'background-color 0.3s, transform 0.3s', '&:hover': { bgcolor: '#e3f2fd', transform: 'translateY(-5px)' } }}>
+                  <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                    <Typography variant="h5" gutterBottom mb={1}>
                       Organ ID: {organ.organId.toString()}
                     </Typography>
-                    <Typography variant="body1"><strong>Type:</strong> {organTypes[organ.organType]}</Typography>
+                    <Typography variant="h6" mb={1}>
+                      <i className={organIcons[organTypes[organ.organType]]} style={{ marginRight: '10px' }}></i>
+                      <strong>Type:</strong> {organTypes[organ.organType]}
+                    </Typography>
                     <Box sx={{ my: 1 }}>
                       <Chip label={organStatus[organ.status]} color={getStatusChipColor(Number(organ.status))} />
                     </Box>
@@ -191,19 +202,19 @@ function OrganPage({ contract, account, isOpo, isHospital }) {
                       Listed By: {organ.listedBy.substring(0, 6)}...{organ.listedBy.substring(organ.listedBy.length - 4)}
                     </Typography>
                   </CardContent>
-                  <CardActions>
+                  <CardActions sx={{ justifyContent: 'center', mt: 2 }}>
                     {organ.status === 0n && isOpo && (
-                      <Button size="small" color="primary" variant="contained" onClick={() => handleReserveOrgan(organ.organId)}>
+                      <Button color="primary" variant="contained" onClick={() => handleReserveOrgan(organ.organId)} sx={{ '&:hover': { transform: 'translateY(-2px)' } }}>
                         Reserve
                       </Button>
                     )}
                     {organ.status === 1n && isHospital && organ.transplantHospital.toLowerCase() === account.toLowerCase() && (
-                      <Button size="small" color="primary" variant="contained" onClick={() => handleRecordTransplant(organ.organId)}>
+                      <Button color="primary" variant="contained" onClick={() => handleRecordTransplant(organ.organId)} sx={{ '&:hover': { transform: 'translateY(-2px)' } }}>
                         Record Transplant
                       </Button>
                     )}
                     {organ.status === 1n && isOpo && (
-                      <Button size="small" color="secondary" variant="outlined" onClick={() => handleRevokeOrgan(organ.organId)}>
+                      <Button color="secondary" variant="outlined" onClick={() => handleRevokeOrgan(organ.organId)} sx={{ '&:hover': { transform: 'translateY(-2px)' } }}>
                         Revoke
                       </Button>
                     )}
